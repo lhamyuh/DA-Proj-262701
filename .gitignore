@@ -1,0 +1,30 @@
+# 数据：只允许放在 data/ 下，永不入库
+data/
+raw/
+*.tif
+*.tiff
+*.hdf
+*.nc
+*.zip
+*.gpkg
+*.shp
+*.shx
+*.dbf
+*.parquet
+
+# Office 二进制：pptx 住 OneDrive；临时锁文件
+*.pptx
+*.ppt
+~$*
+
+# 代码与系统垃圾
+.ipynb_checkpoints/
+__pycache__/
+*.pyc
+.env
+.vscode/
+Thumbs.db
+.DS_Store
+
+# 注意：PDF 与 PNG（slides 快照、图）不忽略，它们要进版本
+# 注意：*.csv 不忽略（handoff 小表要进版本）；原始 CSV 请放 data/ 下

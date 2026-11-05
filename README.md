@@ -2,8 +2,9 @@
 
 **题目：** Spatial Accessibility and Equity Assessment of Public EV Charging Deserts: A Case Study of Shenzhen
 **课程：** Data Analytics（CUHKSZ AY2026-27 Term 1）｜团队 3 人｜C 主讲，A 替补，三人到场
-**关键日期：** 11/21 20:00 内部上传｜11/22 23:59 幻灯片截止｜12/02 现场展示｜12/18 23:59 报告截止
-**代码仓库：** https://github.com/lhamyuh/DA-Proj-262701
+**关键日期：** 11/21 20:00 内部上传｜11/22 23:59 幻灯片截止｜**12/02 现场展示（第 8 个出场，6A609）**｜12/18 23:59 报告截止
+**评分标准：** 两份 rubric 已取得，不强制要求回归或预测分析
+**代码仓库：** https://github.com/lhamyuh/DA-Proj-262701（已邀请其余两名成员）
 **共享云盘：** 校内 OneDrive 共享文件夹（已建立）
 
 ## 当前节点
@@ -19,6 +20,8 @@
 | C | 统筹、幻灯片、讲稿、主讲、报告统稿 | `slides/`、讲稿、报告 |
 
 ## 执行顺序
+
+> 说明：`src/` 下脚本尚未建立，按计划 §5 的交付日逐项补齐。当前目录仅有计划、`README.md`、`log.md`、`.gitignore` 与两份课程模板。
 
 ```powershell
 conda activate ev311

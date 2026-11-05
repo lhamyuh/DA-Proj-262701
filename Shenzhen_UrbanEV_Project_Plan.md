@@ -1,7 +1,7 @@
 # Spatial Accessibility and Equity Assessment of Public EV Charging Deserts: A Case Study of Shenzhen
 
 > 课程：Data Analytics（CUHKSZ AY2026-27 Term 1）｜团队规模：3 人｜A/B/C 为成员代号，启动时填写真实姓名
-> 版本：**v4.0（正式表述版）｜2026-11-05 23:50｜取代 v3.2 及更早版本**
+> 版本：**v4.1（正式表述版）｜2026-11-05 23:50｜取代 v3.2 及更早版本**
 > 展示场次：**12/02（周三）**；幻灯片须于 **11/22 23:59** 前提交
 > 文件性质：本文件为研究计划，非实证结果。文中数值均待计算，幻灯片中不得填入未经计算的预期值。
 
@@ -309,12 +309,9 @@ OneDrive（共享文件夹）
   slides/presentation.pptx   report/final-term.docx   raw_backup/   backup/
 ```
 
-环境（2026-11-05 实测：`python` 指向 3.8.1，未安装 geopandas；C 盘余 18.3 GB，D 盘余 39.4 GB。数据改置于项目内 `data/` 后，D 盘须保留不少于 20 GB 余量）：
 
-```powershell
-conda create -n ev311 -c conda-forge python=3.11 geopandas rasterio rasterstats shapely pyproj pandas numpy matplotlib pyarrow -y
-& "D:\miniconda3\envs\ev311\python.exe" -c "import geopandas,rasterio,rasterstats,pandas;print('env ok',geopandas.__version__,rasterio.__version__)"
-```
+
+
 
 | 项目 | 决定 | 依据 |
 |---|---|---|

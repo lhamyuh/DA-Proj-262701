@@ -1,4 +1,4 @@
-[README.md](https://github.com/user-attachments/files/34476737/README.md)
+[README.md](https://github.com/user-attachments/files/34477308/README.md)
 # Shenzhen EV Charging Deserts — 项目总览
 
 **题目：** Spatial Accessibility and Equity Assessment of Public EV Charging Deserts: A Case Study of Shenzhen
@@ -72,7 +72,8 @@ python src/05_export_figures.py      # 出图 → outputs/figures/
 1. 不得将数据或幻灯片提交至 Git；原始数据仅存放于 `data/`。
 2. 数值修改须先更新 `numbers_frozen.md`，不得在 PowerPoint 中直接修改。
 3. 分析范围已冻结为 M1—M5，不新增模块。
-## Story line
+
+## Story line（C 负责，11/07 前定稿）
 
 **论证链：** 深圳公共充电总量增长 → 但人口与设施空间错配 → 所以看"人均可获得的桩"而非"桩的总数" → 用 Gaussian-2SFCA 把供需拉到同一空间尺度 → 两类荒漠识别把"覆盖缺失"与"相对低可达"分开 → 人口加权 Gini 看分布是否公平 → 敏感性检验结论是否站得住 → 落到"先补哪"的政策优先序。
 
@@ -81,7 +82,7 @@ python src/05_export_figures.py      # 出图 → outputs/figures/
 ## 8 页 PPT 大纲
 
 | 页 | 标题 / 内容 | 时长 | 素材负责人 | 姓名 | 完成状态 |
-|---|---|---:|---|---|---|
+|---|---|---|---|---|---|
 | §1 | 题目、城市问题、三个研究问题 | 35 秒 | A | YANG Linyu | 占位待填，待 11/07 G1 后定稿 |
 | §2 | 数据：年份、275 样本、人口代用指标、QA | 45 秒 | A | YANG Linyu | 待 11/09 三张主表交付 |
 | §3 | 方法：2SFCA + 两类荒漠定义 | 55 秒 | A + B | YANG Linyu + Li Luoyang | 待 11/11（可达性）与 11/12（荒漠表） |

@@ -12,6 +12,11 @@ if (-not (Test-Path "$EnvRoot\python.exe")) {
 
 $env:PATH = "$EnvRoot;$EnvRoot\Library\mingw-w64\bin;$EnvRoot\Library\usr\bin;$EnvRoot\Library\bin;$EnvRoot\Scripts;$env:PATH"
 
+# 关键：Intel MKL 的线程层在本机会硬崩溃（0xC06D007F），必须设为 SEQUENTIAL。
+# 症状：np.corrcoef / np.dot / matplotlib 绘图 / 部分 pandas 分组调用时进程直接消失，无 traceback。
+$env:MKL_THREADING_LAYER = "SEQUENTIAL"
+$env:KMP_DUPLICATE_LIB_OK = "TRUE"
+
 $gdal = "$EnvRoot\Library\share\gdal"
 $proj = "$EnvRoot\Library\share\proj"
 if (Test-Path $gdal) { $env:GDAL_DATA = $gdal } else { Write-Host "[warn] 未找到 $gdal" -ForegroundColor Yellow }

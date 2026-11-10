@@ -1,4 +1,3 @@
-[log.md](https://github.com/user-attachments/files/34476652/log.md)
 # log
 
 记录格式：`日期 | 成员 | 事项 | 影响 / 待办`。按时间顺序追加；同一日多项事项可合并为一条。
@@ -12,6 +11,17 @@
 | 11/05 | 全员 | 建立 OneDrive 共享文件夹与 GitHub 私有仓库 https://github.com/lhamyuh/DA-Proj-262701；数据存放位置改为项目内 `data/`（已加入 `.gitignore`） | 三人完成 clone/push 与云盘访问测试 |
 | 11/06 | 全员 | 成员代号实名化：A＝YANG Linyu、B＝Li Luoyang、C＝Liu Mingjing；同步更新 README「分工」表与检查表负责人列；GitHub 协作者姓名按此核对 | 后续 log 记录统一使用「代号（姓名）」格式 |
 | 11/06 | C（Liu Mingjing） | 交付评分项—证据—负责人—完成状态检查表：展示 5 项（15+10+20+35+20）+ 报告 4 项（30+35+15+20），共 9 行；每行含证据、负责人、完成状态、对应页 | 检查表已并入 README；状态栏为 11/06 当日口径，不得出现预期数值，11/16 冻结后由 C 回填 |
-| 11/06 | C（Liu Mingjing） | 交付 story line 与 8 页 PPT 大纲：三段式单线叙事；8 页合计 395 秒，第 3—6 页合计 215 秒（占 51.2%），与 35% 实验设计 + 20% 方法两项对齐 | 讲稿目标 6:40，第 5 页 65 秒为最长；大纲已并入 README |
+| 11/06 | C（Liu Mingjing） | 交付 story line 与 8 页 PPT 大纲：三段式单线叙事；8 页合计 395 秒，第 3—6 页合计 **230 秒（占 7 分钟的 54.8%）**，与 35% 实验设计 + 20% 方法两项对齐 | 讲稿目标 6:40，第 5 页 65 秒为最长；大纲已并入 README。原文记为“215 秒 / 51.2%”，与逐页相加不符，已按表值更正 |
 | 11/06 | C（Liu Mingjing） | 已确认：两份评分标准已取得，不强制要求回归或预测，范围无需扩展；展示为 12/02 第 8 个出场，地点 6A609；GitHub 已邀请其余两名成员 | 环境与数据尚未开始，D0 于今日 23:00 执行 |
 | 11/06 | B（Li Luoyang） | 完成 6 单元人工算例与 `tests_equity.py`：均匀供给、单区供给两例通过，共 12 项断言；M3/M4 计算内核置于 `src/equity_desert.py`（数字开头的模块名无法被 import，故与 `04_equity_desert.py` 拆开）；本机实测 Python 3.12.7 + pandas 2.2.2，无 geopandas（M3/M4 不需要） | 11/08 口径卡待拍板的六项见 `handoff/2026-11-07/manual_example_6u.md` §10；G1 前须与 A 确认 `accessibility` 字段口径（含 `d0`、站覆盖标记、边界标记） |
+| 11/06 | A（YANG Linyu） | 建立 `ev311`（python 3.11.15）。conda 22.11.1 的经典求解器误装 geopandas 0.9.0（依赖 shapely 的 `cascaded_union`，shapely 2 已删除）与 rasterstats 0.14.0，导致导入失败；已用 pip 升级为 geopandas 1.2.0 / rasterstats 0.21.0 / pyogrio 0.13.0 | 导入检查通过；新增 `activate_env.ps1` 设置 GDAL_DATA 与 PROJ_LIB，消除 gdalvrt.xsd 警告 |
+| 11/06 | A（YANG Linyu） | **D0 判定：环境项通过，数据项未通过**。`data/raw` 为空，尚未开始下载 | 11/07 09:00 前站点表必须到手；G1 仍按 11/07 17:00；若 12:00 仍未到手，通报全组并启用备选源或 1 km 人口档 |
+| 11/06 | 全员 | `README.md` 与 `log.md` 首行各有一条来自聊天附件的残留链接，已删除 | 后续同步文件请直接覆盖正文，勿带入附件链接 |
+| 11/06 | 全员 | 更正 `README.md` 两处数值：① 展示页第 3—6 页合计由“215 秒 / 51.2%”改为“230 秒 / 54.8%”；② 数据评分项中“UrbanEV 9985 站点／563 节”无来源，改为“原始 1,682 站（处理后 1,362 站），样本为 275 个 TAZ” | 请 C 复核 ①、B 复核 ②；后续引用数据集规模一律标注来源 |
+| 11/10 | A（YANG Linyu） | **数据获取完成**：Dryad 包 305.4 MB（结构：外层 zip 含 `UrbanEVDataset.zip` + README 数据字典）、七普 100 m 人口 132.2 MB（Figshare，RAR，bsdtar 可解）、深圳区界 69 KB（DataV）。仅解出 6 个静态表（1.7 MB），未解压 1,682 个逐站 CSV（4.9 GB，动态分析已删不需要） | 审计：4 个文件全 PASS |
+| 11/10 | A（YANG Linyu） | **G1 锁定：路线 B（1 km 格网）**。依据：数据集**无任何 TAZ 多边形**，仅有质心与面积，无法做 TAZ 级人口聚合；不采用 Voronoi。研究区 = 市界内 ∩ 距 TAZ 质心 ≤1.4 km（按 275 区面积合计 982.5 km² 标定） | 结论见 `outputs/qa/g1_conclusion.md`；G1 逾期 3 天 |
+| 11/10 | A（YANG Linyu） | **M1 完成**：`station_master`（1,682 站）、`zone_master`（市域 2,127 格网，含 in_study 949）、QA 报告。校验：市域人口 17,446,224 vs 七普 1,756 万（偏差 0.6%）；研究区人口 1,450 万（83.1%）；区内站 1,562 / 桩 22,818 | M1 原定 11/09，实际 11/10 |
+| 11/10 | A（YANG Linyu） | **M2 完成**：Gaussian-2SFCA 三套半径（1/3/5 km）。区内中位可达性 0.00063 / 0.00134 / 0.00139 桩·人⁻¹；3 km 下 7 个格网半径内无站点 | M2 原定 11/11，提前 1 天 |
+| 11/10 | A（YANG Linyu） | 修正一处方法错误：初版把需求集限定在研究区、供给却含区外站点，导致边缘站供需比被放大（A_i 在 3→5 km 出现 8 倍跳变）；改为需求集用市域全部 2,127 格网 | 现 A_i 中位 1.34 桩/千人与全市 1.43 一致 |
+| 11/10 | A（YANG Linyu） | 交付给 B 的交接包 `handoff/2026-11-10/`（zone_master.csv、accessibility.csv、station_master.csv、README、sha256.txt） | B 可开始 M3/M4；只使用 `in_study == True` |
+| 11/10 | A（YANG Linyu） | 记录两个技术坑：① `rasterio.transform.rowcol/from_bounds` 在本环境硬崩溃（0xC06D007F），须手算窗口偏移；② TAZ 为点几何，`geometry.area` 恒为 0，面积须取表内 `area` 字段 | 已写入脚本注释 |

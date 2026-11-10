@@ -1,4 +1,3 @@
-[README_fixed.md](https://github.com/user-attachments/files/34477726/README_fixed.md)
 # Shenzhen EV Charging Deserts — 项目总览
 
 **题目：** Spatial Accessibility and Equity Assessment of Public EV Charging Deserts: A Case Study of Shenzhen
@@ -10,7 +9,8 @@
 
 ## 当前节点
 
-数据获取阶段：D0 环境与数据自检（11/06 23:00）→ G1 数据冻结（11/07 17:00）
+数据获取阶段。**D0 结果（11/06 23:00）：环境项通过，数据项未通过**（`data/raw` 为空）。环境已可用：python 3.11.15 / geopandas 1.2.0 / rasterio 1.4.4 / rasterstats 0.21.0 / pandas 3.1.1 / numpy 2.4.6。
+下一步：11/07 09:00 前站点表到手 → 17:00 交 G1 结论（路线 A/B、坐标可用性、人口档位、研究区）。
 
 ## 分工
 
@@ -22,15 +22,15 @@
 
 ## 执行顺序
 
-> 说明：`src/` 下脚本尚未建立，按计划 §5 的交付日逐项补齐。当前目录仅有计划、`README.md`、`log.md`、`.gitignore` 与两份课程模板。
+> 说明：`01_audit_inputs.py` 已建立；`02—05` 按计划 §5 的交付日逐项补齐。**PowerShell 未配置 `conda init`，请用绝对路径或先执行 `.\activate_env.ps1`。**
 
 ```powershell
-conda activate ev311
-python src/01_audit_inputs.py        # 数据审计 → outputs/qa/
-python src/02_spatial_population.py  # 人口聚合 → zone_master
-python src/03_accessibility.py       # 2SFCA → accessibility
-python src/04_equity_desert.py       # 荒漠与公平性 → 表
-python src/05_export_figures.py      # 出图 → outputs/figures/
+.\activate_env.ps1                        # 设置 GDAL_DATA / PROJ_LIB 并自检版本
+& "D:\miniconda3\envs\ev311\python.exe" src\01_audit_inputs.py        # 数据审计 → outputs/qa/
+& "D:\miniconda3\envs\ev311\python.exe" src\02_spatial_population.py  # 人口聚合 → zone_master
+& "D:\miniconda3\envs\ev311\python.exe" src\03_accessibility.py       # 2SFCA → accessibility
+& "D:\miniconda3\envs\ev311\python.exe" src\04_equity_desert.py       # 荒漠与公平性 → 表
+& "D:\miniconda3\envs\ev311\python.exe" src\05_export_figures.py      # 出图 → outputs/figures/
 ```
 
 ## 文件位置
@@ -55,7 +55,7 @@ python src/05_export_figures.py      # 出图 → outputs/figures/
 | 评分项（权重） | 本组证据 | 负责人 | 姓名 | 完成状态 | 对应页 |
 |---|---|---|---|---|---|
 | Introduction & Clarity of Topic — 问题动机、目标、显著性（15%） | 三研究问题 + 深圳人口 1700 万量级 × 充电桩空间错配的现实矛盾；荒漠识别与公平性测度的学术缺口 | C | Liu Mingjing | 待 11/07 G1 锁定路线后定稿 | §1 |
-| Dataset, Preprocessing & Analysis — 数据来源、处理流程、分析口径（10%） | UrbanEV 9985 站点 ／ 563 节目的 → 已改为深圳 275 TAZ + 人口加权中心；`data_manifest.csv` 逐条登记 DOI／版本／sha256；`qa_report.md` 记录 CRS 与覆盖率 | A | YANG Linyu | 待 11/09 三张主表交付 | §2 |
+| Dataset, Preprocessing & Analysis — 数据来源、处理流程、分析口径（10%） | UrbanEV 原始 1,682 站（处理后 1,362 站），非全市普查；本研究样本为筛选后 275 个 TAZ（路线 B 下为规则格网）；`data_manifest.csv` 逐条登记 DOI／版本／sha256；`qa_report.md` 记录 CRS 与覆盖率 | A | YANG Linyu | 待 11/09 三张主表交付 | §2 |
 | Methodology & Technical Soundness — 方法、技术实现、理论依据（20%） | Gaussian-2SFCA 完整公式推导：g(d) 归一化 Gaussian 核、R_j 零分母剔除、A_i 单位统一为 每千人桩数；两类荒漠定义（无覆盖 + 相对低可达） | A ／ B | YANG Linyu ／ Li Luoyang | 待 11/07 G1 路线锁定 | §3 |
 | Experiment Design & Results — 实验设计、评估指标、结果、可行性讨论（35%） | 1／3／5km 三套可达性；三类敏感性（半径、阈值、口径）；人口加权 Gini + Lorenz + 最低 20% 群体指标 + P10 四项并列 | A ／ B | YANG Linyu ／ Li Luoyang | 待 11/16 `numbers_frozen.md` 冻结 | §4—6 |
 | Delivery, Q&A & Engagement — 表达、视觉、问答、观众投入度（20%） | 7 分钟严格计时；40 题问答库（A／B 各 10 问 + C 兜底 20 问）；实际场地 11/30 演练录像；11/25 旁听别组收集提问类型 | C | Liu Mingjing | 进行中（11/06—11/21 阶段） | §5 讲稿 + Q&A |
@@ -103,4 +103,5 @@ python src/05_export_figures.py      # 出图 → outputs/figures/
 | §8 | 三个研究问题的回答（各一句） | 30 秒 | 全员 | YANG Linyu ／ Li Luoyang ／ Liu Mingjing | 待 12/01 G4 定版 |
 | **合计** | 讲稿目标 6:40，留 25 秒页间过渡 | **395 秒** | — | — | — |
 
-> 第 3—6 页合计 215 秒，占 7 分钟的 51.2%，对应展示评分中 Experiment Design & Results（35%）+ Methodology & Technical Soundness（20%）两项，是全篇重心。
+> 第 3—6 页合计 **230 秒**（55+55+65+55），占 7 分钟（420 秒）的 **54.8%**，对应展示评分中 Experiment Design & Results（35%）+ Methodology & Technical Soundness（20%）两项，是全篇重心。
+> 注：此前本行写作“215 秒 / 51.2%”，与上表逐页相加不符，现按表内数值更正；230 秒亦满足计划 §7“第 3—6 页不少于 3 分钟”的要求。

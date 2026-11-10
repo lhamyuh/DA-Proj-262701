@@ -1,0 +1,4 @@
+url,doi,version,downloaded_at,bytes,sha256,license,local_path
+https://datadryad.org/dataset/doi:10.5061/dryad.np5hqc04z,10.5061/dryad.np5hqc04z,v20260204,2026-11-10,320249421,2d6b39c51820bbd11d45a2289335b8e9eaa149660a566e5b85cb9665f2b8349c,see Dryad,data/raw/doi_10_5061_dryad_np5hqc04z__v20260204.zip
+https://ndownloader.figshare.com/files/43847643,10.6084/m9.figshare.24916140.v1,2024-08-13,2026-11-10,132167098,b80a6f0c135e3d3941264cfcd5906189c776689ec37800e26814d168ef8edb65,see Figshare,data/raw/PopSE_China2020_100m.rar
+https://geo.datav.aliyun.com/areas_v3/bound/440300_full.json,,datav-geoatlas,2026-11-10,69077,e346a6cb0d5c482bf52fd0b845d0cda8c03a6ab666ce310afd3292a4d1899fa8,DataV GeoAtlas（仅作图与掩膜，非权威边界）,data/raw/boundary/shenzhen_440300_full.json

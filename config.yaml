@@ -1,0 +1,60 @@
+# config.yaml — 全局参数中心
+# 规范：所有阈值、半径、路径只在此定义；脚本中不得出现"魔数"。
+# 任何修改须在 log.md 写一行 [口径]，再在同步会说明。
+
+project:
+  name: shenzhen-ev-deserts
+  version: 0.1.0
+  timezone: Asia/Shanghai
+
+paths:
+  raw: data/raw
+  interim: data/interim
+  processed: data/processed
+  metadata: data/metadata
+  figures: outputs/figures
+  tables: outputs/tables
+  qa: outputs/qa
+  handoff: handoff
+
+study_area:
+  city: Shenzhen
+  admin_code: "440300"
+  demand_unit: null            # G1 锁定后填 "taz" 或 "grid"
+  grid_size_m: 1000            # 路线 B 使用
+  analysis_crs: EPSG:4547      # 仅用于距离与面积计算，不是输入文件的 CRS
+  geographic_crs: EPSG:4326
+
+data:
+  observation_start: 2022-09-01
+  observation_end: 2023-02-28
+  population_year: 2020
+
+accessibility:
+  supply_metric: piles         # piles（主）| stations（仅描述）
+  distance_type: euclidean_projected
+  radius_main_m: 3000
+  radius_sensitivity_m: [1000, 5000]
+  kernel: gaussian_truncated
+  demand_point: population_weighted_centroid
+
+desert:
+  no_coverage_radius_m: 3000
+  low_access_quantile: 0.20
+  low_access_sensitivity: [0.10, 0.30]
+  priority_pop_top_quantile: 0.25
+
+equity:
+  weight: population
+  metrics: [weighted_mean, gini, lorenz, bottom20_share, p10]
+
+qa:
+  min_population_coverage: 0.95
+  min_station_sample: 20
+  min_file_bytes: 1024         # 小于 1 KB 视为可疑（多为下载失败的占位文件）
+
+output:
+  audit_dir: outputs/qa
+  figure_dpi: 300
+  figure_format: png
+  random_seed: 20261106

@@ -25,3 +25,8 @@
 | 11/10 | A（YANG Linyu） | 修正一处方法错误：初版把需求集限定在研究区、供给却含区外站点，导致边缘站供需比被放大（A_i 在 3→5 km 出现 8 倍跳变）；改为需求集用市域全部 2,127 格网 | 现 A_i 中位 1.34 桩/千人与全市 1.43 一致 |
 | 11/10 | A（YANG Linyu） | 交付给 B 的交接包 `handoff/2026-11-10/`（zone_master.csv、accessibility.csv、station_master.csv、README、sha256.txt） | B 可开始 M3/M4；只使用 `in_study == True` |
 | 11/10 | A（YANG Linyu） | 记录两个技术坑：① `rasterio.transform.rowcol/from_bounds` 在本环境硬崩溃（0xC06D007F），须手算窗口偏移；② TAZ 为点几何，`geometry.area` 恒为 0，面积须取表内 `area` 字段 | 已写入脚本注释 |
+| 11/10 | A（YANG Linyu） | 研究区加入孔洞填充：1.4 km 缓冲并集在城区内部留有空洞，被排除的常住人口不合规；改为在区界内做 `binary_fill_holes`（只填内部空洞、不外扩），研究区由 949 → **997 格网**，人口覆盖由 83.1% → **84.4%** | 后续统计以 997 为准；B 的交接包已同步更新 |
+| 11/10 | A（YANG Linyu） | **matplotlib 在本机完全不可用**：任意绘图调用触发 0xC06D007F（DLL/ABI 冲突），重装与升级至 3.11.2 均无效。改用 rasterio 栅格化 + numpy 合成 + Pillow 文字出图 | 任何人不要再尝试 matplotlib；脚本 `05_export_figures.py` 已按此实现 |
+| 11/10 | A（YANG Linyu） | **Fig1、Fig2 出图完成**（300 dpi，`outputs/figures/`）；站点 QA 完成：1,682 站全部落在市界内、无零坐标、125 组共址（264 站） | Fig1/Fig2 原定 11/13，提前 3 天 |
+| 11/10 | A（YANG Linyu） | 交付 `report/sections/a_data_methods.md`：数据段与 2SFCA 方法段（中英各 ≤250 字）、Fig1/Fig2 图注、地图讲解要点 5 条、站点 QA 摘要 | 原定 11/15，提前 5 天；C 可直接取用 |
+| 11/10 | A（YANG Linyu） | **A 独立工作范围已完成**：M1、M2、Fig1、Fig2、方法段、QA、交接包。后续由 B 接 M3/M4；A 在 11/16 G2 前只做复核与答疑 | 待 B 交付 `numbers_frozen.md` 后，A 复核空间位置与量级 |

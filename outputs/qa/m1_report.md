@@ -1,7 +1,7 @@
 # M1 数据基座报告
 
-- 生成：2026-11-10T20:09:34
-- 格网：1000 m；需求单元 = 949 个（研究区内）
+- 生成：2026-11-10T20:21:39
+- 格网：1000 m；需求单元 = 997 个（研究区内）
 
 ## 研究区口径
 
@@ -15,19 +15,20 @@
 |---|---:|
 | grid_cells_total | 6370 |
 | cells_in_city | 2127 |
-| cells_in_study | 949 |
+| cells_in_study | 997 |
 | R_km | 1.4 |
+| study_cells_added_by_hole_fill | 48 |
 | pop_city_km2_sum | 17446224.0 |
-| pop_study_sum | 14504046.0 |
-| pop_city_share_of_study | 0.8314 |
+| pop_study_sum | 14720164.0 |
+| pop_city_share_of_study | 0.8437 |
 | stations_total | 1682 |
-| stations_in_study | 1562 |
+| stations_in_study | 1583 |
 | piles_total | 24798 |
-| piles_in_study | 22818 |
-| cells_with_pop_gt0 | 908 |
+| piles_in_study | 23034 |
+| cells_with_pop_gt0 | 951 |
 | cells_without_pop_data | 0 |
-| stations_per_cell_mean | 1.6459 |
-| cells_without_station | 499 |
+| stations_per_cell_mean | 1.5878 |
+| cells_without_station | 537 |
 
 ## 口径与局限
 

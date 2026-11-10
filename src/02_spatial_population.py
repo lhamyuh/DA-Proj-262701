@@ -168,13 +168,27 @@ def main() -> int:
     })
     cells = gpd.GeoDataFrame(cells, geometry=gpd.points_from_xy(cells.x, cells.y), crs=crs_r)
 
-    # ---------- 7. 研究区选择：区界内 ∩ 距 TAZ ≤ R ----------
+    # ---------- 7. 研究区选择：区界内 ∩ 距 TAZ ≤ R，并填内部孔洞 ----------
     tree = cKDTree(np.c_[taz.geometry.x, taz.geometry.y])
     d_taz, _ = tree.query(np.c_[cells.geometry.x, cells.geometry.y], k=1)
     cells["dist_taz_km"] = d_taz / 1000.0
     inside = cells.within(city)
     cells["in_city"] = inside
-    cells["in_study"] = inside & (cells.dist_taz_km <= R)
+    raw_study = inside & (cells.dist_taz_km <= R)
+
+    # 缓冲并集在城区内部会留下空洞（质心分布不均），这些空洞里的人口会被错误排除。
+    # 处理：在区界内对研究区掩膜做孔洞填充（只填被完全包围的空洞，不外扩边界）。
+    from scipy import ndimage as ndi
+
+    ny_c = int(cells.row.max()) + 1
+    nx_c = int(cells.col.max()) + 1
+    g_raw = np.zeros((ny_c, nx_c), bool)
+    g_raw[cells.row.to_numpy(), cells.col.to_numpy()] = raw_study.to_numpy()
+    g_city = np.zeros((ny_c, nx_c), bool)
+    g_city[cells.row.to_numpy(), cells.col.to_numpy()] = inside.to_numpy()
+    g_fill = ndi.binary_fill_holes(g_raw) & g_city
+    filled_extra = int(g_fill.sum() - g_raw.sum())
+    cells["in_study"] = g_fill[cells.row.to_numpy(), cells.col.to_numpy()]
 
     # ---------- 8. 站点落格 ----------
     tree_c = cKDTree(np.c_[cells.geometry.x, cells.geometry.y])
@@ -212,6 +226,7 @@ def main() -> int:
         "cells_in_city": int(cells.in_city.sum()),
         "cells_in_study": int(len(study_rows)),
         "R_km": R,
+        "study_cells_added_by_hole_fill": filled_extra,
         "calibration": cal,
         "pop_city_km2_sum": pop_city,
         "pop_study_sum": pop_study,

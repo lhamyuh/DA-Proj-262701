@@ -18,10 +18,11 @@
 | 文档 | `docs/numbers_frozen.md` | 数值冻结，含禁用数表 | G2（11/16） | **草案，11/16 冻结** |
 | 文档 | `docs/b_equity_methods.md` | 方法段中英 + 表注 + 统计要点 5 条 + 口径声明 3 条 | 11/15 | 已交付 |
 | 文档 | `docs/number_card.md` | 给 C 的一页数值卡 | 幻灯片第 5–6 页 | 已交付 |
+| 文档 | `docs/delivery_notes_2026-11-12.md` | 11/12 交付说明：口径 6 条、列定义、四处旧数修正 | 历史归档 | 已归档 |
 
 ## 2 三类怎么用
 
-**表格（`tables/`）**——A 复核与 C 取数都用这四个。`desert_table` 与 `equity_table` 是 11/12 交付的正式版（严格小于判据），`sensitivity_table` 是 M5，`table1_main` 是幻灯片与报告的主表。列定义见 `handoff/2026-11-12/README.md` §6。
+**表格（`tables/`）**——A 复核与 C 取数都用这四个。`desert_table` 与 `equity_table` 是 11/12 交付的正式版（严格小于判据），`sensitivity_table` 是 M5，`table1_main` 是幻灯片与报告的主表。列定义与口径见 `docs/delivery_notes_2026-11-12.md` §2、§6。
 
 **图（`figures/`）**——`fig3_lorenz.png` 用于报告（300 dpi），`fig3_lorenz_slide.jpg` 用于幻灯片（3200 宽）。两版是同一张图的不同分辨率，不是两个设计。
 
@@ -47,9 +48,11 @@ python src\08_robustness.py        # 期望：三个假设的最坏扰动都没�
 
 ## 5 与 11/12 包的关系
 
-`handoff/2026-11-12/` 保留为 11/12 那次交付的历史记录（含口径说明、列定义与四处旧数修正）。本目录是它的超集并按类别重组；两者内容冲突时，以本目录为准，因为它是 11/14 重新打包的。
+`handoff/2026-11-12/`（提交 `eda7eb2`）是 11/12 那次交付的历史记录。它的两张表与本目录 `tables/` 下的文件**逐字节一致**（sha256 相同），说明文档已归档为 `docs/delivery_notes_2026-11-12.md`，因此**只交付本目录即可，不需要再发 11/12 文件夹**。
+
+两者内容冲突时以本目录为准——它是 11/14 重新打包的，且 `sha256.txt` 覆盖全部文件。
 
 ## 6 需要对方做的事
 
-- **A**：复核 `tables/` 四张表；并修正 `handoff/2026-11-12/README.md` §7 列的四处旧数（g1 的 949、图内的 949、908、200 格）。
+- **A**：复核 `tables/` 四张表；并修正 `docs/delivery_notes_2026-11-12.md` §7 列的四处旧数（g1 的 949、图内的 949、908、200 格）。
 - **C**：按 `docs/number_card.md` 填第 5–6 页；数值只从 `docs/numbers_frozen.md` 取。

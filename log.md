@@ -35,4 +35,4 @@
 | 11/10 | A（YANG Linyu） | **A 独立工作范围全部完成**：M1、M2、Fig1、Fig2、方法段、站点 QA、交接包、分环统计表。后续由 B 接 M3/M4 | A 在 11/16 G2 前只做复核与答疑 |
 | 11/11 | B（Li Luoyang） | [口径] 低可达判据定稿为「严格小于线性插值分位数」（`quantile_strict`）：04 三处调用点由 rank 改为 strict，半径敏感性重合度改按受影响并集计算；口径卡升 v2 | 主情景 191→190 格、211.2→210.3 万；1 km 低可达为空（24.1% 格网 A_i=0），并集仍 229 格 / 151.0 万 |
 | 11/11 | B（Li Luoyang） | 新增 `07_crosscheck.py`（出数代码与受测内核 9/9 等价）与 `08_robustness.py`（三个上游假设扰动实测）；12 项测试仍全过 | 稳健性见 `handoff/2026-11-12/README.md` §5 |
-| 11/14 | B（Li Luoyang） | 补交 11/12 交付包（本地生成、逾期两天、尚未 push）；交付 M5 敏感性表与 Fig3；新增 `09_freeze.py` 与 `10_fig3.py`，一次生成表 1、`numbers_frozen.md`、数值卡 | 待 A 复核；push 仍缺凭据，需先在 VS Code 或终端登录 |
+| 11/14 | B（Li Luoyang） | 全部交付物汇总为 `handoff/2026-11-14/`：tables 4 + figures 2 + docs 4 + README + sha256，共 12 个文件；11/12 说明归档进 `docs/delivery_notes_2026-11-12.md`，11-12 目录转为历史记录；新增 `09_freeze.py`（表 1 / 数值冻结 / 数值卡）、`10_fig3.py`（Fig3 两面板两版）、`11_package.py`（打包并重算哈希）；Fig3 标题与图注统一为 997 表述 | 待 A 复核、C 取数；4 个提交未 push（凭据缺失），需先在 VS Code 或终端登录 |

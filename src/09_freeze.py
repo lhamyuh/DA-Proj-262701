@@ -225,10 +225,10 @@ python src\\09_freeze.py
 
 191 格 / 211.2 万 · 200 格 / 202.3 万 · 949 格 / 1,450 万 / 83.1% · 908 个格网 · 图里的「949 cells」。
 """
-    out16 = ROOT / "handoff" / "2026-11-16"
-    out16.mkdir(parents=True, exist_ok=True)
-    (out16 / "number_card.md").write_text(card, encoding="utf-8", newline="\n")
-    print(f"[out] {out16 / 'number_card.md'}")
+    out_docs = ROOT / "handoff" / "2026-11-14" / "docs"
+    out_docs.mkdir(parents=True, exist_ok=True)
+    (out_docs / "number_card.md").write_text(card, encoding="utf-8", newline="\n")
+    print(f"[out] {out_docs / 'number_card.md'}")
     return 0
 
 

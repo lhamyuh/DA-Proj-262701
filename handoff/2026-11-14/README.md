@@ -1,55 +1,55 @@
-# 交接包 2026-11-14（B → A 复核 / C 取数）
+# 交付总包 2026-11-14（B → A / C）
 
-- 生成：2026-11-14 11:30｜负责人：B（Li Luoyang）
-- 出表脚本：`src/04_equity_desert.py`｜一致性断言：`src/07_crosscheck.py`｜稳健性：`src/08_robustness.py`
-- 出图脚本：`src/10_fig3.py`
-- 输入：`handoff/2026-11-10/accessibility.csv`、`zone_master.csv`
+- 负责人：B（Li Luoyang）｜生成：2026-11-14
+- 内容：截至今日 B 的全部交付物，按**表格 / 图 / 文档**三类归档
 - 口径：`handoff/2026-11-08/kou_jing_card.md` v2
+- **本目录是只读快照**，不是第二份可编辑副本。改数请改源头再重跑（见 §3）
 
-## 1 本包内容
+## 1 分类索引
 
-| 文件 | 行数 / 尺寸 | 对应任务 | 状态 |
-|---|---|---|---|
-| `sensitivity_table.csv` | 5 行 | M5 敏感性 | 交付 |
-| `outputs/figures/fig3_lorenz.png` | 3300 × 1560 | Fig3（报告） | 交付 |
-| `outputs/figures/slide/fig3_lorenz_slide.jpg` | 3200 × 1513 | Fig3（幻灯片） | 交付 |
+| 类别 | 文件 | 内容 | 对应任务 | 状态 |
+|---|---|---|---|---|
+| 表格 | `tables/desert_table.csv` | 9 行 = 3 半径 × 3 阈值 | M3 荒漠识别 | 已交付（11/12） |
+| 表格 | `tables/equity_table.csv` | 3 行 = 三个半径 | M4 公平性 | 已交付（11/12） |
+| 表格 | `tables/sensitivity_table.csv` | 5 行 = 半径 2 + 阈值 3 | M5 敏感性 | 已交付（11/14） |
+| 表格 | `tables/table1_main.csv` | 表 1，14 行 × 三半径 | 表 1 | 已交付 |
+| 图 | `figures/fig3_lorenz.png` | Fig3 报告版 3300 × 1560 | M4 / M5 | 已交付（11/14） |
+| 图 | `figures/fig3_lorenz_slide.jpg` | Fig3 幻灯片版 3200 × 1513 | 幻灯片第 5 页 | 已交付（11/14） |
+| 文档 | `docs/numbers_frozen.md` | 数值冻结，含禁用数表 | G2（11/16） | **草案，11/16 冻结** |
+| 文档 | `docs/b_equity_methods.md` | 方法段中英 + 表注 + 统计要点 5 条 + 口径声明 3 条 | 11/15 | 已交付 |
+| 文档 | `docs/number_card.md` | 给 C 的一页数值卡 | 幻灯片第 5–6 页 | 已交付 |
 
-表 1 与方法段见 `outputs/tables/table1_main.csv` 与 `report/sections/b_equity_methods.md`；数值冻结见 `numbers_frozen.md`。
+## 2 三类怎么用
 
-## 2 M5 结果
+**表格（`tables/`）**——A 复核与 C 取数都用这四个。`desert_table` 与 `equity_table` 是 11/12 交付的正式版（严格小于判据），`sensitivity_table` 是 M5，`table1_main` 是幻灯片与报告的主表。列定义见 `handoff/2026-11-12/README.md` §6。
 
-**半径敏感性**（基准 3 km，重合度在受影响并集上计算）
+**图（`figures/`）**——`fig3_lorenz.png` 用于报告（300 dpi），`fig3_lorenz_slide.jpg` 用于幻灯片（3200 宽）。两版是同一张图的不同分辨率，不是两个设计。
 
-| 对照 | Spearman ρ | 基准并集 | 对照并集 | 重合 | jaccard | 基准保留率 |
-|---|---:|---:|---:|---:|---:|---:|
-| 1 km | 0.552379 | 190 格 | 229 格 | 97 格 | 0.301242 | 0.510526 |
-| 5 km | 0.799248 | 190 格 | 190 格 | 136 格 | 0.557377 | 0.715789 |
+**文档（`docs/`）**——`number_card.md` 直接给 C；`b_equity_methods.md` 给 C 写报告与讲稿；`numbers_frozen.md` 是 G2 之后全组唯一的数值来源，**11/16 20:00 之前是草案**。
 
-**阈值敏感性**（3 km）
+## 3 三条使用规则
 
-| 档位 | 阈值（桩/千人） | 低可达 | 并集占人口 |
-|---|---:|---|---:|
-| 10% | 0.393940 | 95 格 / 886,042 人 | 6.0192% |
-| 20% | 0.688453 | 190 格 / 2,102,601 人 | 14.2838% |
-| 30% | 0.925924 | 285 格 / 3,441,326 人 | 23.3783% |
+1. **不要在本目录改任何数字。** 本目录的 `sha256.txt` 会在源头重跑后失效——这正是设计目的：它一旦对不上，说明该重新打包了。
+2. **权威版本在源头**：`outputs/tables/*.csv`、`outputs/figures/*`、`numbers_frozen.md`、`report/sections/b_equity_methods.md`。改数改那里。
+3. **刷新本目录**：源头变了就重跑 `04 → 09 → 11`（见 §4），本目录会整体重建。
 
-只报这两个维度，不作组合（半径 × 阈值不在计划范围内）。
-
-## 3 Fig3 说明
-
-两面板：(a) 三个半径的洛伦兹曲线，Gini 标在图例；(b) 3 km 下最低 20% 群体与其余 80% 的人均可达性对比（0.52 vs 1.83 桩/千人，3.5 倍）。
-
-- 统计域 951 个有人口格网，人口加权。
-- 最低 20% 群体的定义为「按人口升序累计到 20% 止」，边界格按人口比例计入。
-- 图注（可直接用）：见 `report/sections/b_equity_methods.md`。
-
-## 4 复现
+## 4 复现与刷新
 
 ```powershell
 $env:MKL_THREADING_LAYER = "SEQUENTIAL"
 python src\04_equity_desert.py     # 三张表
-python src\10_fig3.py              # fig3_lorenz.png + slide 版
+python src\10_fig3.py              # Fig3 两版
+python src\09_freeze.py            # 表 1、numbers_frozen、数值卡
+python src\11_package.py           # 汇总到本目录并重算 sha256
 python src\07_crosscheck.py        # 期望：[PASS] 9 / 9
+python src\08_robustness.py        # 期望：三个假设的最坏扰动都没有改变量级与方向
 ```
 
-`sensitivity_table.csv` 的哈希见同目录 `sha256.txt`。
+## 5 与 11/12 包的关系
+
+`handoff/2026-11-12/` 保留为 11/12 那次交付的历史记录（含口径说明、列定义与四处旧数修正）。本目录是它的超集并按类别重组；两者内容冲突时，以本目录为准，因为它是 11/14 重新打包的。
+
+## 6 需要对方做的事
+
+- **A**：复核 `tables/` 四张表；并修正 `handoff/2026-11-12/README.md` §7 列的四处旧数（g1 的 949、图内的 949、908、200 格）。
+- **C**：按 `docs/number_card.md` 填第 5–6 页；数值只从 `docs/numbers_frozen.md` 取。

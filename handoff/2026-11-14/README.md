@@ -1,58 +1,52 @@
-# 交付总包 2026-11-14（B → A / C）
+# 交接包 2026-11-14（A → B）
 
-- 负责人：B（Li Luoyang）｜生成：2026-11-14
-- 内容：截至今日 B 的全部交付物，按**表格 / 图 / 文档**三类归档
-- 口径：`handoff/2026-11-08/kou_jing_card.md` v2
-- **本目录是只读快照**，不是第二份可编辑副本。改数请改源头再重跑（见 §3）
+生成脚本：`src/02_spatial_population.py`、`src/03_accessibility.py`、`src/06_export_handoff.py`
+数据口径见 `outputs/qa/m1_report.md`、`outputs/qa/m2_report.md`。
 
-## 1 分类索引
+## zone_master.csv（2127 行）
+需求单元为 **1 km 规则格网**（数据集不含 TAZ 多边形，故无法做 TAZ 级人口聚合）。
 
-| 类别 | 文件 | 内容 | 对应任务 | 状态 |
-|---|---|---|---|---|
-| 表格 | `tables/desert_table.csv` | 9 行 = 3 半径 × 3 阈值 | M3 荒漠识别 | 已交付（11/12） |
-| 表格 | `tables/equity_table.csv` | 3 行 = 三个半径 | M4 公平性 | 已交付（11/12） |
-| 表格 | `tables/sensitivity_table.csv` | 5 行 = 半径 2 + 阈值 3 | M5 敏感性 | 已交付（11/14） |
-| 表格 | `tables/table1_main.csv` | 表 1，14 行 × 三半径 | 表 1 | 已交付 |
-| 图 | `figures/fig3_lorenz.png` | Fig3 报告版 3300 × 1560 | M4 / M5 | 已交付（11/14） |
-| 图 | `figures/fig3_lorenz_slide.jpg` | Fig3 幻灯片版 3200 × 1513 | 幻灯片第 5 页 | 已交付（11/14） |
-| 文档 | `docs/numbers_frozen.md` | 数值冻结，含禁用数表 | G2（11/16） | **草案，11/16 冻结** |
-| 文档 | `docs/b_equity_methods.md` | 方法段中英 + 表注 + 统计要点 5 条 + 口径声明 3 条 | 11/15 | 已交付 |
-| 文档 | `docs/number_card.md` | 给 C 的一页数值卡 | 幻灯片第 5–6 页 | 已交付 |
-| 文档 | `docs/delivery_notes_2026-11-12.md` | 11/12 交付说明：口径 6 条、列定义、四处旧数修正 | 历史归档 | 已归档 |
+| 列 | 含义 | 单位 |
+|---|---|---|
+| cell_id | 格网编号 r{行}c{列} | — |
+| row, col | 栅格行列 | — |
+| x, y | 格网中心（Albers 等积投影） | m |
+| pop | 格网人口（10×10 个 100 m 像元求和） | 人 |
+| has_data | 是否有人口栅格数据 | bool |
+| dist_taz_km | 到最近 TAZ 质心距离 | km |
+| in_city | 是否在市界内 | bool |
+| in_study | 是否属研究区（市界内且 dist_taz ≤ 1.4 km） | bool |
+| n_stations | 格网内站点数 | 个 |
+| sum_charge | 格网内桩数 | 桩 |
 
-## 2 三类怎么用
+## accessibility.csv（6381 行 = 2127 格网 × 3 个半径）
+| 列 | 含义 | 单位 |
+|---|---|---|
+| cell_id, d0_m | 格网与搜索半径 | —, m |
+| A_i | Gaussian-2SFCA 可达性 | 桩/人 |
+| piles_per_1000 | A_i × 1000 | 每千人桩数 |
+| n_stations_in_radius | 半径内站点数 | 个 |
+| in_study | 是否属研究区 | bool |
 
-**表格（`tables/`）**——A 复核与 C 取数都用这四个。`desert_table` 与 `equity_table` 是 11/12 交付的正式版（严格小于判据），`sensitivity_table` 是 M5，`table1_main` 是幻灯片与报告的主表。列定义与口径见 `docs/delivery_notes_2026-11-12.md` §2、§6。
+**B 只需用 `in_study == True` 的格网做公平性与荒漠统计**；需求定义与阈值见计划 §4.2—§4.4。
 
-**图（`figures/`）**——`fig3_lorenz.png` 用于报告（300 dpi），`fig3_lorenz_slide.jpg` 用于幻灯片（3200 宽）。两版是同一张图的不同分辨率，不是两个设计。
+## station_master.csv（1682 行，供核对，B 一般不需用）
+## 未提供的表
+- TAZ 级人口：无多边形，不提供。
+- 动态占用：范围冻结中已删除。
 
-**文档（`docs/`）**——`number_card.md` 直接给 C；`b_equity_methods.md` 给 C 写报告与讲稿；`numbers_frozen.md` 是 G2 之后全组唯一的数值来源，**11/16 20:00 之前是草案**。
+---
 
-## 3 三条使用规则
+## 给 B 的字段口径答复
 
-1. **不要在本目录改任何数字。** 本目录的 `sha256.txt` 会在源头重跑后失效——这正是设计目的：它一旦对不上，说明该重新打包了。
-2. **权威版本在源头**：`outputs/tables/*.csv`、`outputs/figures/*`、`numbers_frozen.md`、`report/sections/b_equity_methods.md`。改数改那里。
-3. **刷新本目录**：源头变了就重跑 `04 → 09 → 11`（见 §4），本目录会整体重建。
+| 要求 | 对应列 | 说明 |
+|---|---|---|
+| `d0` | `d0_m` | 1000 / 3000 / 5000（米）；主半径 3000 |
+| 站覆盖标记 | `n_stations_in_radius` | 该格网在 `d0_m` 内可达的站点数；**`== 0` 即"无观测覆盖"** |
+| 边界标记 | `in_study` | 研究区（市界内且距 TAZ 质心 ≤1.4 km，含内部孔洞填补） |
 
-## 4 复现与刷新
+三条补充：
 
-```powershell
-$env:MKL_THREADING_LAYER = "SEQUENTIAL"
-python src\04_equity_desert.py     # 三张表
-python src\10_fig3.py              # Fig3 两版
-python src\09_freeze.py            # 表 1、numbers_frozen、数值卡
-python src\11_package.py           # 汇总到本目录并重算 sha256
-python src\07_crosscheck.py        # 期望：[PASS] 9 / 9
-python src\08_robustness.py        # 期望：三个假设的最坏扰动都没有改变量级与方向
-```
-
-## 5 与 11/12 包的关系
-
-`handoff/2026-11-12/`（提交 `eda7eb2`）是 11/12 那次交付的历史记录。它的两张表与本目录 `tables/` 下的文件**逐字节一致**（sha256 相同），说明文档已归档为 `docs/delivery_notes_2026-11-12.md`，因此**只交付本目录即可，不需要再发 11/12 文件夹**。
-
-两者内容冲突时以本目录为准——它是 11/14 重新打包的，且 `sha256.txt` 覆盖全部文件。
-
-## 6 需要对方做的事
-
-- **A**：复核 `tables/` 四张表；并修正 `docs/delivery_notes_2026-11-12.md` §7 列的四处旧数（g1 的 949、图内的 949、908、200 格）。
-- **C**：按 `docs/number_card.md` 填第 5–6 页；数值只从 `docs/numbers_frozen.md` 取。
+1. **不要用 `n_stations`（格网内站点数）判断覆盖**——它只数落在同一格网内的站，会严重高估荒漠。覆盖一律用 `n_stations_in_radius`。
+2. **需求集是 2127 行、统计只用 949/997 行**：2SFCA 的分母必须包含半径内的全部人口；若只把研究区格网当需求，区外站点的供需比会被系统性放大。
+3. **`pop == 0` 的格网**：研究区 997 个格网中 `pop > 0` 的有 **951** 个、`pop == 0` 的 **46** 个；后者不计入人口加权 Gini 与 Lorenz。

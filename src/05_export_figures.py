@@ -166,8 +166,9 @@ def main() -> int:
     d.text((40, 26), "Fig 1  Study area, population and observed public charging supply",
            font=font(40), fill=(15, 15, 15))
     d.text((40, H + 128),
-           "Study area: 949 1-km cells inside the Shenzhen boundary and within 1.4 km of a TAZ centroid "
-           "(949 km2). Albers equal-area projection; station data 2022-09 to 2023-02.",
+           f"Study area: {len(study_cells)} 1-km cells inside the Shenzhen boundary and within 1.4 km of a "
+           f"TAZ centroid ({len(study_cells)} km2). Albers equal-area projection; "
+           f"station data 2022-09 to 2023-02.",
            font=font(24), fill=(100, 100, 100))
     f1 = fig_dir / "fig1_study_area.png"
     fig1.save(f1); print(f"[out] {f1}  {fig1.size}")
@@ -194,9 +195,12 @@ def main() -> int:
     d.text((40, 74), "Cooler = lower expected piles reachable per person", font=font(24), fill=(90, 90, 90))
 
     # ================= Fig 2b：无观测覆盖 =================
+    zero_ids = [r.cell_id for r in study_cells.itertuples()
+                if r.cell_id in a3.index and a3.loc[r.cell_id, "n_stations_in_radius"] == 0]
     zero_cells = [box(r.x - 500, r.y - 500, r.x + 500, r.y + 500)
-                  for r in study_cells.itertuples()
-                  if r.cell_id in a3.index and a3.loc[r.cell_id, "n_stations_in_radius"] == 0]
+                  for r in study_cells.itertuples() if r.cell_id in set(zero_ids)]
+    pop_of = study_cells.set_index("cell_id")["pop"]
+    n_zero_pop = int((pop_of.loc[zero_ids] > 0).sum()) if zero_ids else 0
     zmask = rasterize([(g, 1) for g in zero_cells], out_shape=shape, transform=tr,
                       fill=0, dtype="uint8").astype(bool)
     b2 = np.full(shape + (3,), 255, dtype=np.uint8)
@@ -208,7 +212,8 @@ def main() -> int:
     img4 = Image.fromarray(b2)
     d = ImageDraw.Draw(img4)
     d.text((40, 30), "(b) Cells with no observed station within 3 km", font=font(34), fill=(20, 20, 20))
-    d.text((40, 74), f"n = {len(zero_cells)} of 949 study cells (red)",
+    d.text((40, 74), f"n = {len(zero_cells)} of {len(study_cells)} study cells; "
+                     f"{n_zero_pop} of them have residents (red)",
            font=font(24), fill=(90, 90, 90))
 
     fig2 = Image.new("RGB", (W * 2 + gap, H + 150), "white")

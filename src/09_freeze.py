@@ -85,6 +85,37 @@ def main() -> int:
 
     h10 = {n: sha256(HANDOFF_10 / n) for n in ("accessibility.csv", "zone_master.csv", "station_master.csv")}
 
+    # ---- 复核附注用的两个数（2026-11-14 A 的复核意见，不改数）----
+    # ① 最低 20% 群体若「整格计入」会是多少——用来对照现用的「末格按人口份额拆分」
+    acc10 = pd.read_csv(HANDOFF_10 / "accessibility.csv", encoding="utf-8-sig")
+    z10 = pd.read_csv(HANDOFF_10 / "zone_master.csv", encoding="utf-8-sig")
+    pair = (acc10.loc[acc10.d0_m == 3000, ["cell_id", "piles_per_1000", "pop"]]
+            .merge(z10[["cell_id", "in_study"]], on="cell_id"))
+    valid = pair[pair.in_study & (pair["pop"] > 0)].sort_values("piles_per_1000", kind="mergesort")
+    w_all = valid["pop"].to_numpy(float)
+    a_all = valid["piles_per_1000"].to_numpy(float)
+    target = main_share * w_all.sum()
+    whole_pop = whole_mass = 0.0
+    for v, wv in zip(a_all, w_all):
+        if whole_pop >= target - 1e-12:      # 整格：不切开边界格
+            break
+        whole_pop += wv
+        whole_mass += v * wv
+    whole_mean = whole_mass / whole_pop
+
+    # ② 半径敏感性 ρ：平均秩 vs 序数秩（1 km 侧大量并列 0 值）
+    def rho_pair(other_d0: int) -> tuple[float, float, int]:
+        b = acc10.loc[acc10.d0_m == 3000, ["cell_id", "piles_per_1000"]].rename(columns={"piles_per_1000": "b"})
+        a = acc10.loc[acc10.d0_m == other_d0, ["cell_id", "piles_per_1000"]].rename(columns={"piles_per_1000": "a"})
+        j = b.merge(a, on="cell_id").merge(z10[["cell_id", "in_study", "pop"]], on="cell_id")
+        j = j[j.in_study & (j["pop"] > 0)]
+        return (float(j["b"].corr(j["a"], method="spearman")),
+                float(j["b"].rank(method="first").corr(j["a"].rank(method="first"))),
+                int(len(j) - j["a"].nunique()))
+
+    rho_avg, rho_ord, rho_ties = rho_pair(1000)
+    n_distinct_1k = int(len(valid) - rho_ties)
+
     def row(metric, value, src):
         return f"| {metric} | {value} | {src} |"
 
@@ -165,7 +196,7 @@ def main() -> int:
 | 数 | 出处 | 为什么禁用 | 现值 |
 |---|---|---|---|
 | 191 格 / 2,111,567 人 | 11/10 首轮 `rank` 口径 | 判据已改为 `quantile_strict` | 190 格 / 2,102,601 人 |
-| 200 格 / 2,023,405 人 | `log.md` 11/10（A） | 用当前数据复现不出（200 格 → 2,272,245；191 格 → 2,111,567） | 190 格 / 2,102,601 人 |
+| 200 格 / 2,023,405 人 | `log.md` 11/10（A） | 997 格（含 46 个零人口）按 A_i 升序取前 200 格；排序含零人口格，与 M3「pop>0」统计域不同口径 | 190 格 / 2,102,601 人 |
 | 949 格 / 1,450 万 / 83.1% | `outputs/qa/g1_conclusion.md` | 孔洞填充前 | 997 / 1,472 万 / 84.4% |
 | 1,562 站 / 22,818 桩 | `outputs/qa/g1_conclusion.md` | 同上 | 1,583 站 / 23,034 桩 |
 | 908 个有人口格网 | `handoff/2026-11-10/README.md` | 949 版正确、997 版应为 951 | 951 |
@@ -178,9 +209,19 @@ def main() -> int:
 | 11/10 | 首轮三张表（`rank` 口径），未提交 |
 | 11/11 | 判据定稿为 `quantile_strict`，三张表重跑；新增 `07_crosscheck.py`（9/9）与 `08_robustness.py`（三个上游假设） |
 | 11/14 | 表 1、方法段、本文件首版 |
+| 11/14 | 按 A 的复核意见补三条口径附注（不改数）：末格拆分、ρ 的并列值处理、200 格来源；附注数字由本脚本从交接包现算，不再手写 |
 | 11/16 20:00 | G2：重跑 `09_freeze.py` 使本文件标记为「已冻结」 |
 
-## 6 复现
+## 6 口径附注（2026-11-14 复核，不改数）
+
+| 议题 | 口径 | 实测 |
+|---|---|---|
+| 最低 20% 群体的末格 | 按人口份额切开计入（口径卡 §6.1），不是整格计入 | 拆分 {bottom_pop:,.1f} 人 / {bottom_mean:.6f}；整格 {whole_pop:,.0f} 人 / {whole_mean:.6f} |
+| 半径敏感性 ρ 的并列值 | 用平均秩；1 km 侧 229 格 `A_i` 恰为 0，序数秩随并列内部次序浮动，不可复现 | 3 km 对 1 km：平均秩 {rho_avg:.6f}；序数秩 {rho_ord:.4f}（两次实现分别得 0.5559 与 {rho_ord:.4f}，差异即来自并列内部次序）；{len(valid)} 个有效格仅 {n_distinct_1k} 个不同取值 |
+| 「200 格 / 2,023,405」的来源 | 997 格（含 46 个零人口）按 `A_i` 升序取前 200 格 | 已复现；该排序含零人口格，与统计域口径不同，不再使用 |
+| 相对低可达 ≠ 最低 20% 人口 | 前者按**单元**分位（190/951 格），后者按**人口**切（{bottom_pop:,.0f} 人） | 两者不可混用；并集人口占比 14.28% 是前者的人口当量 |
+
+## 7 复现
 
 ```powershell
 $env:MKL_THREADING_LAYER = "SEQUENTIAL"

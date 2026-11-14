@@ -18,9 +18,9 @@ The desert analysis is conducted on the 951 populated 1 km cells. A cell is clas
 
 ## 2 表 1 说明（可直接作表注）
 
-**Table 1.** Desert extent and population-weighted accessibility by catchment radius (Shenzhen, 2020 census population; station supply 2022–09 to 2023–02). Population-weighted statistics use the 951 of 997 study cells with population > 0; the 46 zero-population cells are counted but excluded from weighted statistics. Low-access cells fall strictly below the 20th percentile of the accessibility distribution. Affected population is the de-duplicated union of the two desert classes. Distances are straight-line in an Albers equal-area projection, not road-network distances.
+**Table 1.** Desert extent and population-weighted accessibility by catchment radius (Shenzhen, 2020 census population; station supply 2022–09 to 2023–02). Population-weighted statistics use the 951 of 997 study cells with population > 0; the 46 zero-population cells are counted but excluded from weighted statistics. Low-access cells fall strictly below the 20th percentile of the accessibility distribution. Affected population is the de-duplicated union of the two desert classes. The bottom-20% group's boundary cell is split in proportion to its population rather than counted whole. Distances are straight-line in an Albers equal-area projection, not road-network distances.
 
-**表 1.** 三个服务半径下的荒漠范围与人口加权可达性。加权统计使用研究区 997 个格网中人口大于零的 951 个；人口为零的 46 个格网仅计数、不进入加权统计。相对低可达指严格低于可达性分布 20% 分位的格网。受影响人口为两类荒漠区域的并集（已去重）。距离为 Albers 等积投影下的平面直线距离，非路网距离。
+**表 1.** 三个服务半径下的荒漠范围与人口加权可达性。加权统计使用研究区 997 个格网中人口大于零的 951 个；人口为零的 46 个格网仅计数、不进入加权统计。相对低可达指严格低于可达性分布 20% 分位的格网。受影响人口为两类荒漠区域的并集（已去重）。最低 20% 群体的边界格按人口份额拆分计入，不作整格计入。距离为 Albers 等积投影下的平面直线距离，非路网距离。
 
 ---
 
@@ -52,3 +52,12 @@ The desert analysis is conducted on the 951 populated 1 km cells. A cell is clas
 | 人口 | 七普 2020，100 m 格网，「人/像元」 | 同 | 一致 |
 | 可达性单位 | 桩/人，对外报每千人桩数 | 同 | 一致 |
 | 未观测区域 | 不赋零供给 | 同（`in_study` 之外不进入统计） | 一致 |
+
+---
+
+## 6 复核附注（2026-11-14，不改数）
+
+1. **最低 20% 群体的末格按人口份额拆分。** 若整格计入，该群体为 2,949,181 人、加权均值 0.517846；按份额拆分为 2,944,032.8 人、均值 0.517292，与 `equity_table.csv` 的 `bottom20_population` / `bottom20_mean_per_1000` 一致。拆分口径更贴近「最低 20% 人口」的字面含义，也符合口径卡 §6.1。
+2. **半径敏感性 ρ 用平均秩，并列值会让序数秩不可复现。** 3 km 对 1 km：平均秩 0.552379；1 km 侧 951 个有效格只有 723 个不同取值（229 格 `A_i` 恰为 0），改用序数秩约为 0.556，且随并列内部次序浮动，故不作口径。5 km 侧无并列，两种秩一致（0.799248）。
+3. **「相对低可达」与「最低 20% 人口」是两套口径。** 前者按单元分位（190 / 951 格，人口占比 14.28%），后者按人口切分（2,944,033 人）；两者不可互相替代，正文与图表须分别标注。
+4. **「200 格 / 2,023,405 人」的来源已定位**：997 格（含 46 个零人口）按 `A_i` 升序取前 200 格，排序含零人口格，与 M3 的 `pop > 0` 统计域不同口径，已作废。

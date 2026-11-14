@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
-"""06_export_handoff.py — 生成给 B 的交接包（CSV + README + sha256）
+"""06_export_handoff.py — 生成 A 给 B 的交接包（CSV + README + sha256）
+
+输出目录固定为 `handoff/A_<日期>/`，**不得**写入 B 的 `handoff/<日期>/` 包
+（2026-11-14 曾因按当天日期输出而覆盖 B 的 README 与 sha256，已修正）。
 
 约定（计划 §5.5）：一次交接 = 四件东西
   ① 数据文件（CSV，不用 parquet，B 无需 pyarrow） ② README（列名+单位+口径）
@@ -7,6 +10,7 @@
 """
 from __future__ import annotations
 
+import argparse
 import hashlib
 from datetime import date
 from pathlib import Path
@@ -14,8 +18,14 @@ from pathlib import Path
 import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[1]
-OUT = ROOT / "handoff" / f"{date.today():%Y-%m-%d}"
-OUT.mkdir(parents=True, exist_ok=True)
+
+
+def sha256(p: Path) -> str:
+    h = hashlib.sha256()
+    with p.open("rb") as fh:
+        for b in iter(lambda: fh.read(1 << 20), b""):
+            h.update(b)
+    return h.hexdigest()
 
 
 def sha256(p: Path) -> str:
@@ -27,6 +37,17 @@ def sha256(p: Path) -> str:
 
 
 def main() -> int:
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--date", default=str(date.today()), help="交接日期，默认今天")
+    args = ap.parse_args()
+    OUT = ROOT / "handoff" / args.date
+
+    # 保险：绝不覆盖 B 的交付包（含 tables/ 或 docs/ 说明该目录归 B）
+    if (OUT / "tables").exists() or (OUT / "docs").exists():
+        print(f"[REFUSE] {OUT} 是 B 的交付包，拒绝写入。请用 --date 指定 A 自己的交接日。")
+        return 2
+    OUT.mkdir(parents=True, exist_ok=True)
+
     zm = pd.read_parquet(ROOT / "data/processed/zone_master.parquet")
     acc = pd.read_parquet(ROOT / "data/processed/accessibility.parquet")
     sm = pd.read_parquet(ROOT / "data/processed/station_master.parquet")
